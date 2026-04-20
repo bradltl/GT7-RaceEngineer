@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gt7-race-engineer/contracts/normalized_telemetry.schema.json",
+  "title": "TelemetrySnapshot",
+  "type": "object",
+  "required": ["event_id", "timestamp_ms", "session_id", "source", "connection_state"],
+  "properties": {
+    "event_id": { "type": "string" },
+    "timestamp_ms": { "type": "integer" },
+    "session_id": { "type": "string" },
+    "source": { "type": "string" },
+    "source_mode": { "type": "string", "enum": ["live", "replay", "mock", "unknown"] },
+    "connection_state": { "type": "string", "enum": ["connected", "degraded", "disconnected", "unknown"] },
+    "track_name": { "type": "string" },
+    "session_type": { "type": "string" },
+    "lap_number": { "type": "integer" },
+    "laps_total": { "type": "integer" },
+    "laps_remaining": { "type": "integer" },
+    "lap_time_ms": { "type": "integer" },
+    "last_lap_time_ms": { "type": "integer" },
+    "best_lap_time_ms": { "type": "integer" },
+    "fuel_liters": { "type": "number" },
+    "fuel_capacity_liters": { "type": "number" },
+    "fuel_laps_remaining_estimate": { "type": "number" },
+    "projected_fuel_to_finish_liters": { "type": "number" },
+    "tire_wear_pct": { "type": "number" },
+    "speed_kph": { "type": "number" },
+    "throttle_pct": { "type": "number" },
+    "brake_pct": { "type": "number" },
+    "gear": { "type": "integer" },
+    "rpm": { "type": "integer" },
+    "flags": {
+      "type": "object",
+      "additionalProperties": { "type": "boolean" }
+    },
+    "weather": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
+    },
+    "derived": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
+    },
+    "raw": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "validation_warnings": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}
+

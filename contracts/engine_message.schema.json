@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gt7-race-engineer/contracts/engine_message.schema.json",
+  "title": "EngineerMessage",
+  "type": "object",
+  "required": ["id", "timestamp_ms", "priority", "category", "text"],
+  "properties": {
+    "id": { "type": "string" },
+    "timestamp_ms": { "type": "integer" },
+    "priority": { "type": "string", "enum": ["critical", "warning", "info"] },
+    "category": { "type": "string" },
+    "text": { "type": "string" },
+    "ttl_ms": { "type": "integer" },
+    "source_event_id": { "type": "string" },
+    "suppressed": { "type": "boolean" },
+    "suppression_reason": { "type": "string" }
+  },
+  "additionalProperties": false
+}
+

@@ -1,0 +1,49 @@
+{
+  "telemetry_capture": {
+    "udp_listen": "0.0.0.0:33739",
+    "engineer_ingest_url": "http://127.0.0.1:8000/ingest",
+    "recording_dir": "recordings",
+    "replay_speed_ms": 1000,
+    "source_mode": "replay"
+  },
+  "engineer": {
+    "db_path": "data/engineer.sqlite3",
+    "history_limit": 50,
+    "stale_telemetry_ms": 2500,
+    "connection_health_ms": 2000,
+    "cooldowns_ms": {
+      "final_lap": 60000,
+      "laps_remaining": 30000,
+      "fuel_critical": 30000,
+      "projected_fuel_to_finish": 30000,
+      "box_this_lap": 30000,
+      "best_lap_update": 0,
+      "connection_lost": 10000
+    },
+    "thresholds": {
+      "fuel_critical_laps": 1.0,
+      "fuel_manage_laps": 2.0,
+      "fuel_to_finish_margin_liters": 0.5,
+      "best_lap_improvement_ms": 250,
+      "lap_delta_notice_ms": 500
+    },
+    "enabled_callouts": {
+      "laps_remaining": true,
+      "final_lap": true,
+      "fuel_status": true,
+      "projected_fuel_to_finish": true,
+      "box_this_lap": true,
+      "pit_recommendation": true,
+      "best_lap": true,
+      "connection_health": true,
+      "traction_warning": false,
+      "opponent_gap": false,
+      "yellow_flag": false,
+      "rain_approach": false
+    }
+  },
+  "web_ui": {
+    "engineer_ws_url": "ws://127.0.0.1:8000/ws",
+    "engineer_http_url": "http://127.0.0.1:8000"
+  }
+}
