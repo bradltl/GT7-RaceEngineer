@@ -1,0 +1,134 @@
+{
+  "fuel_critical": {
+    "urgent": [
+      { "text": "Fuel critical. Box this lap.", "file": "fuel_critical_1.mp3" },
+      { "text": "Box this lap. Fuel critical.", "file": "fuel_critical_2.mp3" }
+    ]
+  },
+  "fuel_save_required": {
+    "warning": [
+      { "text": "Fuel save required.", "file": "fuel_save_required_1.mp3" },
+      { "text": "Lift and coast now.", "file": "fuel_save_required_2.mp3" }
+    ]
+  },
+  "borderline_fuel": {
+    "warning": [
+      { "text": "Fuel borderline.", "file": "borderline_fuel_1.mp3" },
+      { "text": "Watch the fuel.", "file": "borderline_fuel_2.mp3" }
+    ]
+  },
+  "fuel_margin_healthy": {
+    "normal": [
+      { "text": "Fuel looks good.", "file": "fuel_margin_healthy_1.mp3" },
+      { "text": "Fuel margin healthy.", "file": "fuel_margin_healthy_2.mp3" }
+    ]
+  },
+  "two_laps_remaining": {
+    "normal": [
+      { "text": "Two laps remaining.", "file": "two_laps_remaining_1.mp3" },
+      { "text": "Two to go.", "file": "two_laps_remaining_2.mp3" }
+    ]
+  },
+  "final_lap": {
+    "normal": [
+      { "text": "Final lap.", "file": "final_lap_1.mp3" },
+      { "text": "Bring it home.", "file": "final_lap_2.mp3" }
+    ]
+  },
+  "end_phase_push": {
+    "normal": [
+      { "text": "Push to the flag.", "file": "end_phase_push_1.mp3" },
+      { "text": "End phase, go now.", "file": "end_phase_push_2.mp3" }
+    ]
+  },
+  "rear_overheating": {
+    "warning": [
+      { "text": "Rear grip dropping.", "file": "rear_overheating_1.mp3" },
+      { "text": "Watch the rear tires.", "file": "rear_overheating_2.mp3" }
+    ]
+  },
+  "front_overheating": {
+    "warning": [
+      { "text": "Fronts overheating.", "file": "front_overheating_1.mp3" },
+      { "text": "Protect the front.", "file": "front_overheating_2.mp3" }
+    ]
+  },
+  "cold_tires": {
+    "normal": [
+      { "text": "Tires are cold.", "file": "cold_tires_1.mp3" },
+      { "text": "Build grip now.", "file": "cold_tires_2.mp3" }
+    ]
+  },
+  "understeer_building": {
+    "normal": [
+      { "text": "Understeer building.", "file": "understeer_building_1.mp3" },
+      { "text": "Smoother turn-in.", "file": "understeer_building_2.mp3" }
+    ]
+  },
+  "rear_grip_falling": {
+    "warning": [
+      { "text": "Rear grip falling.", "file": "rear_grip_falling_1.mp3" },
+      { "text": "Protect the rear.", "file": "rear_grip_falling_2.mp3" }
+    ]
+  },
+  "wheelspin_detected": {
+    "warning": [
+      { "text": "Wheelspin detected.", "file": "wheelspin_detected_1.mp3" },
+      { "text": "Roll the throttle.", "file": "wheelspin_detected_2.mp3" }
+    ]
+  },
+  "brake_instability": {
+    "warning": [
+      { "text": "Brake instability.", "file": "brake_instability_1.mp3" },
+      { "text": "Softer brake release.", "file": "brake_instability_2.mp3" }
+    ]
+  },
+  "overdriving": {
+    "urgent": [
+      { "text": "Overdriving.", "file": "overdriving_1.mp3" },
+      { "text": "Back it off.", "file": "overdriving_2.mp3" }
+    ]
+  },
+  "on_best_lap_pace": {
+    "normal": [
+      { "text": "On best-lap pace.", "file": "on_best_lap_pace_1.mp3" },
+      { "text": "Keep repeating that.", "file": "on_best_lap_pace_2.mp3" }
+    ]
+  },
+  "losing_pace": {
+    "warning": [
+      { "text": "Losing pace.", "file": "losing_pace_1.mp3" },
+      { "text": "Clean up the lap.", "file": "losing_pace_2.mp3" }
+    ]
+  },
+  "pace_inconsistency": {
+    "normal": [
+      { "text": "Pace is inconsistent.", "file": "pace_inconsistency_1.mp3" },
+      { "text": "Stabilize the laps.", "file": "pace_inconsistency_2.mp3" }
+    ]
+  },
+  "degradation_phase_detected": {
+    "warning": [
+      { "text": "Degradation phase.", "file": "degradation_phase_detected_1.mp3" },
+      { "text": "Protect the stint.", "file": "degradation_phase_detected_2.mp3" }
+    ]
+  },
+  "direct_tire_wear_path": {
+    "warning": [
+      { "text": "Tire wear rising.", "file": "direct_tire_wear_path_1.mp3" },
+      { "text": "Tires getting tired.", "file": "direct_tire_wear_path_2.mp3" }
+    ]
+  },
+  "inferred_tire_life_path": {
+    "warning": [
+      { "text": "Tire life fading.", "file": "inferred_tire_life_path_1.mp3" },
+      { "text": "Tires are fading.", "file": "inferred_tire_life_path_2.mp3" }
+    ]
+  },
+  "box_this_lap": {
+    "urgent": [
+      { "text": "Box this lap.", "file": "box_this_lap_1.mp3" },
+      { "text": "Pit this lap.", "file": "box_this_lap_2.mp3" }
+    ]
+  }
+}

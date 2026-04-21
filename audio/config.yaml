@@ -1,0 +1,33 @@
+audio:
+  volume: 0.85
+  queue_size: 8
+  player_backend: auto
+  default_tone: normal
+  dry_run_playback_ms: 600
+  cooldowns_ms:
+    fuel_critical: 15000
+    fuel_save_required: 15000
+    borderline_fuel: 30000
+    fuel_margin_healthy: 60000
+    two_laps_remaining: 30000
+    final_lap: 60000
+    end_phase_push: 30000
+    rear_overheating: 20000
+    front_overheating: 20000
+    cold_tires: 20000
+    understeer_building: 20000
+    rear_grip_falling: 15000
+    wheelspin_detected: 10000
+    brake_instability: 10000
+    overdriving: 30000
+    on_best_lap_pace: 0
+    losing_pace: 20000
+    pace_inconsistency: 20000
+    degradation_phase_detected: 30000
+    direct_tire_wear_path: 30000
+    inferred_tire_life_path: 30000
+    box_this_lap: 30000
+  timing_thresholds:
+    brake_threshold_pct: 30
+    throttle_threshold_pct: 35
+    steering_angle_threshold_deg: 12
