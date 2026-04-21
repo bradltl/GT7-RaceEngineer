@@ -1,0 +1,73 @@
+# Default thresholds for the deterministic GT7 race engineer.
+# TODO: validate each numeric threshold against live race sessions and tune by car class.
+
+version: 1
+
+feature_flags:
+  direct_tire_wear_enabled: false
+  inferred_tire_life_enabled: true
+
+thresholds:
+  fuel_critical_laps: 1.0
+  fuel_to_finish_margin_liters: 0.5
+  fuel_save_margin_laps: 2.0
+  best_lap_improvement_ms: 250
+  lap_degradation_ms: 500
+  tire_temp_hot_c: 98
+  tire_temp_cold_c: 65
+  slip_ratio_wheelspin: 0.08
+  slip_ratio_lockup: -0.08
+  tire_life_warning_pct: 35
+  tire_life_critical_pct: 15
+  telemetry_stale_ms: 2500
+
+cooldowns_ms:
+  fuel_projected_deficit: 30000
+  fuel_critical: 30000
+  box_this_lap: 30000
+  laps_remaining_notice: 30000
+  final_lap: 60000
+  tire_temp_hot: 20000
+  tire_temp_cold: 20000
+  grip_building: 30000
+  exit_wheelspin: 15000
+  brake_lockup: 15000
+  traction_loss: 20000
+  best_lap: 0
+  last_lap_degradation: 20000
+  pace_drop: 30000
+  direct_tire_wear_alert: 30000
+  inferred_tire_life_alert: 30000
+  telemetry_stale: 10000
+  session_state_loss: 15000
+
+priorities:
+  critical:
+    - fuel_projected_deficit
+    - fuel_critical
+    - box_this_lap
+  warning:
+    - final_lap
+    - tire_temp_hot
+    - tire_temp_cold
+    - exit_wheelspin
+    - brake_lockup
+    - traction_loss
+    - direct_tire_wear_alert
+    - inferred_tire_life_alert
+    - telemetry_stale
+  info:
+    - laps_remaining_notice
+    - grip_building
+    - best_lap
+    - last_lap_degradation
+    - pace_drop
+
+suppression:
+  same_rule_same_state_only: true
+  suppress_info_when_critical_active: true
+  suppress_duplicate_action_messages: true
+  require_state_change_for_reissue: true
+
+# TODO: split thresholds by car class, tire compound, and race length once live validation exists.
+

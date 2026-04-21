@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gt7-race-engineer/shared/contracts/telemetry.schema.json",
+  "title": "NormalizedTelemetrySnapshot",
+  "type": "object",
+  "required": [
+    "event_id",
+    "timestamp_ms",
+    "session_id",
+    "source",
+    "source_mode",
+    "connection_state"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "timestamp_ms": {
+      "type": "integer"
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "source_mode": {
+      "type": "string",
+      "enum": ["live", "replay", "mock", "unknown"]
+    },
+    "connection_state": {
+      "type": "string",
+      "enum": ["connected", "degraded", "disconnected", "unknown"]
+    },
+    "track_name": {
+      "type": "string"
+    },
+    "session_type": {
+      "type": "string"
+    },
+    "lap_number": {
+      "type": "integer"
+    },
+    "laps_total": {
+      "type": "integer"
+    },
+    "laps_remaining": {
+      "type": "integer"
+    },
+    "laps_remaining_source": {
+      "type": "string",
+      "enum": ["explicit", "derived"]
+    },
+    "lap_time_ms": {
+      "type": "integer"
+    },
+    "last_lap_time_ms": {
+      "type": "integer"
+    },
+    "best_lap_time_ms": {
+      "type": "integer"
+    },
+    "fuel_liters": {
+      "type": "number"
+    },
+    "fuel_capacity_liters": {
+      "type": "number"
+    },
+    "fuel_laps_remaining_estimate": {
+      "type": "number"
+    },
+    "projected_fuel_to_finish_liters": {
+      "type": "number"
+    },
+    "tire_wear_pct": {
+      "type": "number",
+      "description": "Direct tire wear percentage when validated. TODO: confirm GT7 support."
+    },
+    "tire_wear_source": {
+      "type": "string",
+      "enum": ["direct", "inferred", "unknown"]
+    },
+    "tire_life_estimate_pct": {
+      "type": "number",
+      "description": "Inferred tire life estimate. TODO: validate formulas against live sessions."
+    },
+    "tire_temps_c": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "wheel_speeds_mps": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "slip_ratio_by_wheel": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "speed_kph": {
+      "type": "number"
+    },
+    "speed_mps": {
+      "type": "number"
+    },
+    "throttle_pct": {
+      "type": "number"
+    },
+    "brake_pct": {
+      "type": "number"
+    },
+    "gear": {
+      "type": "integer"
+    },
+    "rpm": {
+      "type": "integer"
+    },
+    "position": {
+      "type": "integer"
+    },
+    "flags": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "weather": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "derived": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "validation_warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "raw": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "extensions": {
+      "type": "object",
+      "description": "Future adapter payloads for yellow flags, gaps, rain, pit intent, and other non-phase-1 sources.",
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false,
+  "$comment": "TODO: validate each field against live GT7 packets and keep uncertain fields optional until confirmed."
+}
+

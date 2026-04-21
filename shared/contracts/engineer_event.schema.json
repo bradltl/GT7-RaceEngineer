@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://gt7-race-engineer/shared/contracts/engineer_event.schema.json",
+  "title": "EngineerEvent",
+  "type": "object",
+  "required": [
+    "event_id",
+    "timestamp_ms",
+    "rule_id",
+    "family",
+    "priority",
+    "category",
+    "message"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string"
+    },
+    "timestamp_ms": {
+      "type": "integer"
+    },
+    "rule_id": {
+      "type": "string"
+    },
+    "family": {
+      "type": "string",
+      "description": "Rule family name such as fuel, lap phase, tire, slip, pace, or degradation."
+    },
+    "category": {
+      "type": "string",
+      "description": "Short machine category for grouping and suppression."
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "warning", "info"]
+    },
+    "message": {
+      "type": "string"
+    },
+    "recommended_action": {
+      "type": "string"
+    },
+    "cooldown_ms": {
+      "type": "integer"
+    },
+    "ttl_ms": {
+      "type": "integer"
+    },
+    "suppressed": {
+      "type": "boolean"
+    },
+    "suppression_reason": {
+      "type": "string"
+    },
+    "source_event_id": {
+      "type": "string"
+    },
+    "required_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "validation_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$comment": "TODO: align emitted engineer events with the live implementation once GT7 field mappings are fully validated."
+}
+
