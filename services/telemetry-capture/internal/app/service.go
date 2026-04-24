@@ -15,20 +15,23 @@ import (
 	"sync"
 	"time"
 
+	"gt7race/telemetry-capture/internal/gt7"
 	"gt7race/telemetry-capture/internal/model"
 )
 
 type Service struct {
-	cfg    *Config
-	mu     sync.RWMutex
-	health model.CaptureHealth
-	latest model.TelemetrySnapshot
-	events []model.TelemetrySnapshot
+	cfg     *Config
+	mu      sync.RWMutex
+	health  model.CaptureHealth
+	latest  model.TelemetrySnapshot
+	events  []model.TelemetrySnapshot
+	decoder *gt7.Decoder
 }
 
 func NewService(cfg *Config) *Service {
 	return &Service{
-		cfg: cfg,
+		cfg:     cfg,
+		decoder: gt7.NewDecoder(cfg.TelemetryCapture.HeartbeatType),
 		health: model.CaptureHealth{
 			Mode: cfg.TelemetryCapture.SourceMode,
 		},
@@ -126,7 +129,7 @@ func (s *Service) runReplayFile(path string) {
 			s.setForwardError(fmt.Sprintf("decode replay line: %v", err))
 			continue
 		}
-		s.ingest(snapshot)
+		_ = s.ingest(snapshot)
 		time.Sleep(time.Duration(s.cfg.TelemetryCapture.ReplaySpeedMS) * time.Millisecond)
 	}
 	if err := scanner.Err(); err != nil {
@@ -138,7 +141,7 @@ func (s *Service) runMock() {
 	base := time.Now().UnixMilli()
 	for i, snapshot := range mockSnapshots(base) {
 		snapshot.TimestampMS = time.Now().UnixMilli() + int64(i*250)
-		s.ingest(snapshot)
+		_ = s.ingest(snapshot)
 		time.Sleep(1 * time.Second)
 	}
 }
@@ -156,6 +159,14 @@ func (s *Service) runLiveUDP() {
 	}
 	defer conn.Close()
 
+	heartbeatDone := make(chan struct{})
+	if s.cfg.TelemetryCapture.PlayStationIP != "" {
+		go s.runHeartbeatLoop(heartbeatDone)
+	} else {
+		log.Printf("telemetry capture live mode running without playstation_ip; packets will be recorded but no heartbeat will be sent")
+	}
+	defer close(heartbeatDone)
+
 	buf := make([]byte, 4096)
 	for {
 		n, remote, err := conn.ReadFromUDP(buf)
@@ -164,18 +175,80 @@ func (s *Service) runLiveUDP() {
 			continue
 		}
 
-		// TODO(gt7-field-validation): decode the encrypted GT7 payload here.
-		// For now we persist the raw packet shape so the capture path exists
-		// without pretending the live normalization is solved.
-		if err := s.recordRawPacket(remote.String(), buf[:n]); err != nil {
-			s.setForwardError(fmt.Sprintf("record raw packet: %v", err))
+		if err := s.handleLivePacket(remote.String(), buf[:n]); err != nil {
+			s.setForwardError(fmt.Sprintf("handle live packet: %v", err))
+		}
+	}
+}
+
+func (s *Service) runHeartbeatLoop(done <-chan struct{}) {
+	target := net.JoinHostPort(s.cfg.TelemetryCapture.PlayStationIP, "33739")
+	remote, err := net.ResolveUDPAddr("udp", target)
+	if err != nil {
+		s.setForwardError(fmt.Sprintf("resolve heartbeat target: %v", err))
+		return
+	}
+	conn, err := net.DialUDP("udp", nil, remote)
+	if err != nil {
+		s.setForwardError(fmt.Sprintf("dial heartbeat target: %v", err))
+		return
+	}
+	defer conn.Close()
+
+	payload := []byte(strings.TrimSpace(s.cfg.TelemetryCapture.HeartbeatType))
+	if len(payload) == 0 {
+		payload = []byte("A")
+	}
+	ticker := time.NewTicker(time.Duration(s.cfg.TelemetryCapture.HeartbeatIntervalMS) * time.Millisecond)
+	defer ticker.Stop()
+
+	send := func() {
+		if _, err := conn.Write(payload); err != nil {
+			s.setForwardError(fmt.Sprintf("send heartbeat: %v", err))
+			return
+		}
+		s.mu.Lock()
+		s.health.LastForwardError = ""
+		s.mu.Unlock()
+	}
+
+	send()
+	for {
+		select {
+		case <-done:
+			return
+		case <-ticker.C:
+			send()
+		}
+	}
+}
+
+func (s *Service) handleLivePacket(remoteAddr string, payload []byte) error {
+	decoded, err := s.decoder.Decode(payload)
+	if err != nil {
+		if rawErr := s.recordRawPacket(remoteAddr, payload); rawErr != nil {
+			return fmt.Errorf("decode live packet: %v; raw record: %w", err, rawErr)
 		}
 		s.mu.Lock()
 		s.health.EventsRecorded++
 		s.health.LastTimestampMS = time.Now().UnixMilli()
-		s.health.LastEventID = fmt.Sprintf("raw-%s-%d", remote.String(), s.health.EventsRecorded)
+		s.health.LastEventID = fmt.Sprintf("raw-%s-%d", remoteAddr, s.health.EventsRecorded)
+		s.health.LastForwardError = err.Error()
 		s.mu.Unlock()
+		return err
 	}
+
+	snapshot := decoded.Snapshot
+	snapshot.TimestampMS = time.Now().UnixMilli()
+	if snapshot.SessionID == "" {
+		snapshot.SessionID = "live-gt7"
+	}
+	snapshot.SourceMode = "live"
+	snapshot.ConnectionState = "connected"
+	snapshot.ValidationWarnings = append(snapshot.ValidationWarnings, "TODO: validate live GT7 packet field offsets against your console build")
+	snapshot.Raw["remote_addr"] = remoteAddr
+	snapshot.Raw["packet_len"] = len(payload)
+	return s.ingest(snapshot)
 }
 
 func (s *Service) recordRawPacket(remoteAddr string, payload []byte) error {
@@ -186,10 +259,10 @@ func (s *Service) recordRawPacket(remoteAddr string, payload []byte) error {
 	}
 	defer file.Close()
 	packet := model.RawPacket{
-		TimestampMS:  time.Now().UnixMilli(),
-		RemoteAddr:   remoteAddr,
-		SourceMode:   "live",
-		PayloadBase64: base64.StdEncoding.EncodeToString(payload),
+		TimestampMS:    time.Now().UnixMilli(),
+		RemoteAddr:     remoteAddr,
+		SourceMode:     "live",
+		PayloadBase64:  base64.StdEncoding.EncodeToString(payload),
 		ValidationNote: "raw live GT7 UDP payload retained before decoder validation",
 	}
 	encoded, err := json.Marshal(packet)
@@ -202,7 +275,7 @@ func (s *Service) recordRawPacket(remoteAddr string, payload []byte) error {
 	return nil
 }
 
-func (s *Service) ingest(snapshot model.TelemetrySnapshot) {
+func (s *Service) ingest(snapshot model.TelemetrySnapshot) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	s.latest = snapshot
@@ -219,7 +292,9 @@ func (s *Service) ingest(snapshot model.TelemetrySnapshot) {
 	}
 	if err := s.forwardSnapshot(snapshot); err != nil {
 		s.health.LastForwardError = err.Error()
+		return err
 	}
+	return nil
 }
 
 func (s *Service) recordSnapshot(snapshot model.TelemetrySnapshot) error {

@@ -8,11 +8,14 @@ import (
 
 type Config struct {
 	TelemetryCapture struct {
-		UDPListen      string `json:"udp_listen"`
-		EngineerURL    string `json:"engineer_ingest_url"`
-		RecordingDir   string `json:"recording_dir"`
-		ReplaySpeedMS  int    `json:"replay_speed_ms"`
-		SourceMode     string `json:"source_mode"`
+		UDPListen           string `json:"udp_listen"`
+		EngineerURL         string `json:"engineer_ingest_url"`
+		RecordingDir        string `json:"recording_dir"`
+		ReplaySpeedMS       int    `json:"replay_speed_ms"`
+		SourceMode          string `json:"source_mode"`
+		PlayStationIP       string `json:"playstation_ip"`
+		HeartbeatType       string `json:"heartbeat_type"`
+		HeartbeatIntervalMS int    `json:"heartbeat_interval_ms"`
 	} `json:"telemetry_capture"`
 }
 
@@ -34,6 +37,11 @@ func LoadConfig(path string) (*Config, error) {
 	if cfg.TelemetryCapture.SourceMode == "" {
 		cfg.TelemetryCapture.SourceMode = "replay"
 	}
+	if cfg.TelemetryCapture.HeartbeatType == "" {
+		cfg.TelemetryCapture.HeartbeatType = "A"
+	}
+	if cfg.TelemetryCapture.HeartbeatIntervalMS == 0 {
+		cfg.TelemetryCapture.HeartbeatIntervalMS = 1250
+	}
 	return &cfg, nil
 }
-

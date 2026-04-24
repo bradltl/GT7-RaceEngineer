@@ -15,6 +15,7 @@ The live GT7 UDP payload is treated as an unknown until validated. Phase 1 uses 
 - `docs/` product and architecture documents
 - `docs/install-linux.md` Linux installation guide
 - `docs/todo.md` live todo/status list
+- `docs/live-gt7-test.md` direct PS5/GT7 live test setup
 - `contracts/` normalized telemetry schemas and sample recordings
 - `config/` default thresholds and feature flags
 - `services/telemetry-capture/` Go telemetry ingest and replay scaffold
@@ -62,6 +63,4 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/api/replay -ContentTyp
 
 5. Open the dashboard at the Vite URL shown in the terminal.
 
-Optional:
-
-- Point `telemetry-capture` at the engineer `/ingest` endpoint once the live UDP decoder is validated.
+- Optional live test path: set `telemetry_capture.source_mode` to `live` and configure `telemetry_capture.playstation_ip` in `config/default.json`, then follow `docs/live-gt7-test.md`.

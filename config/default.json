@@ -4,7 +4,10 @@
     "engineer_ingest_url": "http://127.0.0.1:8000/ingest",
     "recording_dir": "recordings",
     "replay_speed_ms": 1000,
-    "source_mode": "replay"
+    "source_mode": "replay",
+    "playstation_ip": "",
+    "heartbeat_type": "A",
+    "heartbeat_interval_ms": 1250
   },
   "engineer": {
     "db_path": "data/engineer.sqlite3",
